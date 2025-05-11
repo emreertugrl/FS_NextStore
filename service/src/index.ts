@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-
+import cors from "cors";
 // Middleware importu
 import authRoutes from "./modules/auth/auth.routes.ts";
 import errorMiddleware from "./modules/middleware/errorHandler.ts";
@@ -13,6 +13,15 @@ dotenv.config();
 // express çağırılır.
 const app = express();
 
+app.use(express.json());
+app.use(
+  cors({
+    origin: "*", // her yerden erişebilir
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+    credentials: true, // cookie'leri client'e gönderir
+  })
+);
+
 // port belirlenir.
 const port = (process.env.PORT as string) || 3000;
 
@@ -20,7 +29,7 @@ const port = (process.env.PORT as string) || 3000;
 mongoose
   .connect(process.env.DATABASE_URL as string)
   .then(() => console.log("Veritabanına bağlanıldı ✔✔✔"))
-  .catch((err) => console.log("Veritabanına bağlanamadı 💣💣💣", err));
+  .catch((err) => console.log("Veritabanına bağlanamadı 💣💣💣", err.message));
 
 // gelen isteklere cevap verme
 app.get("/", (req: Request, res: Response) => {
