@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 
 // Middleware importu
 import authRoutes from "./modules/auth/auth.routes.ts";
+import errorMiddleware from "./modules/middleware/errorHandler.ts";
 // Route modüllerinin importu
 
 // ortam değişkeni
@@ -36,6 +37,9 @@ app.get("/health", (req: Request, res: Response) => {
     message: "Sunucu çalışıyor. Sunucu zamanı: " + new Date().toISOString(),
   });
 });
+
+// Hata Middleware
+app.use(errorMiddleware);
 
 // portun dinlenmesi
 app.listen(port, () => {
