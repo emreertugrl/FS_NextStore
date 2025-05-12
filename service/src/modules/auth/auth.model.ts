@@ -8,6 +8,7 @@ interface IUser extends Document {
   email: string;
   password: string;
   role: string;
+  refreshToken: string;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 // Kullanıcı şeması
@@ -18,6 +19,7 @@ const userSchema = new Schema<IUser>(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, default: "User" },
+    refreshToken: { type: String },
   },
   {
     timestamps: true, // Yaratılma ve güncellenme zamanlarını otomatik ekler

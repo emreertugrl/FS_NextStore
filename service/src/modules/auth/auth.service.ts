@@ -1,10 +1,10 @@
-import { UserRegisterDto } from "./auth.dto.ts";
+import { UserLoginDto, UserRegisterDto } from "./auth.dto.ts";
 import User from "./auth.model.ts";
 import jwt from "jsonwebtoken";
 
 class AuthService {
   // Create Access Token
-  static async generateAccessToken(user: { _id: string; email: string; role: string }) {
+  static async generateAccessToken(user: any) {
     const payload: { userId: string; email: string; role: string } = {
       userId: user._id.toString(),
       email: user.email,
@@ -14,7 +14,7 @@ class AuthService {
   }
 
   // Create Refresh Token
-  static async generateRefreshToken(user: { _id: string }) {
+  static async generateRefreshToken(user: any) {
     const payload = {
       userId: user._id.toString(),
     };
@@ -49,6 +49,41 @@ class AuthService {
       const { password, __v, ...userWithoutPassword } = user.toObject();
       return { ...userWithoutPassword };
     } catch (error) {
+      throw error;
+    }
+  }
+  static async login(userData: UserLoginDto) {
+    try {
+      const existingUser = await User.findOne({ username: userData.username });
+      if (!existingUser) {
+        throw new Error("Invalid credentials");
+      }
+
+      const isMatch = await existingUser.comparePassword(userData.password);
+      if (!isMatch) {
+        throw new Error("Invalid credentials");
+      }
+      // Access Token ve Refresh Token üretmek
+      const accessToken = await this.generateAccessToken(existingUser);
+      const refreshToken = await this.generateRefreshToken(existingUser);
+      // Refresh token'ı veritabanına kaydet
+      existingUser.refreshToken = refreshToken;
+      await existingUser.save();
+
+      // Şifre ve diğer hassas veriler olmadan kullanıcıyı dön
+      const {
+        password,
+        __v,
+        refreshToken: _,
+        ...userWithoutSensitiveData
+      } = existingUser.toObject();
+
+      return {
+        user: userWithoutSensitiveData,
+        accessToken,
+        refreshToken,
+      };
+    } catch (error: any) {
       throw error;
     }
   }

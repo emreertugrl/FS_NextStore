@@ -32,11 +32,10 @@ export const createUserSchema: ObjectSchema<UserRegisterDto> = Joi.object({
     }),
 });
 
-// Login Schema
+// Login Schema (updated)
 export const loginUserSchema: ObjectSchema<UserLoginDto> = Joi.object({
-  username: Joi.string().required().messages({
-    "string.empty": "Kullanıcı adı zorunludur",
-    "any.required": "Kullanıcı adı zorunludur",
+  username: Joi.string().messages({
+    "string.empty": "Kullanıcı adı boş olamaz",
   }),
   password: Joi.string()
     .min(8)
