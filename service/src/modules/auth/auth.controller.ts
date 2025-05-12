@@ -33,12 +33,19 @@ class AuthContoller {
       next(error);
     }
   }
-  static async refresh(req: Request, res: Response): Promise<void> {
+  static async refresh(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      res.status(201).json({
-        message: "refresh",
-      });
-    } catch (error) {}
+      const refreshToken = req?.cookies?.refreshToken;
+      if (!refreshToken) {
+        throw new Error("Refresh token not available");
+        return;
+      }
+      const accessToken = await AuthService.refreshToken(refreshToken);
+
+      res.status(200).json(accessToken);
+    } catch (error) {
+      next(error);
+    }
   }
   static async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {

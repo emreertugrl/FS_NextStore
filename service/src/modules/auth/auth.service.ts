@@ -101,6 +101,20 @@ class AuthService {
       throw error;
     }
   }
+  static async refreshToken(refreshToken: string) {
+    try {
+      const decoded = await this.validateToken(refreshToken, true);
+      const user = await User.findById(decoded.userId);
+      if (!user) {
+        throw new Error("User not found");
+        return;
+      }
+      const accessToken = await this.generateAccessToken(user);
+      return { accessToken };
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default AuthService;
