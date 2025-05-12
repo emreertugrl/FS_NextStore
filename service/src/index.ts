@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 // Middleware importu
 import authRoutes from "./modules/auth/auth.routes.ts";
 import errorMiddleware from "./modules/middleware/errorHandler.ts";
@@ -21,6 +22,7 @@ app.use(
     credentials: true, // cookie'leri client'e gönderir
   })
 );
+app.use(cookieParser());
 
 // port belirlenir.
 const port = (process.env.PORT as string) || 3000;

@@ -40,12 +40,26 @@ class AuthContoller {
       });
     } catch (error) {}
   }
-  static async logout(req: Request, res: Response): Promise<void> {
+  static async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      res.status(201).json({
-        message: "logout",
+      const refreshToken = req?.cookies?.refreshToken; // 🍪 Cookie'den alınır
+      if (!refreshToken) {
+        throw new Error("Refresh token not provided");
+      }
+      // Servis çağrılır
+      await AuthService.logout(refreshToken); // Eğer böyle bir servis yazdıysan
+
+      // Cookie'yi temizle
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+        sameSite: "strict",
+        // secure: process.env.NODE_ENV === "production",
       });
-    } catch (error) {}
+
+      res.status(200).json({ message: "Logout successful" });
+    } catch (error) {
+      next(error);
+    }
   }
 }
 

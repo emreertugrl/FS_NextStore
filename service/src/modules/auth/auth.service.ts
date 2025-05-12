@@ -87,6 +87,20 @@ class AuthService {
       throw error;
     }
   }
+  static async logout(refreshToken: string) {
+    try {
+      const user = await User.findOne({ refreshToken });
+      if (!user) {
+        throw new Error("Refresh token invalid");
+      }
+
+      // refreshToken alanını sıfırla
+      user.refreshToken = null;
+      await user.save();
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default AuthService;
