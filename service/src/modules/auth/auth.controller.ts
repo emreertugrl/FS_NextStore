@@ -68,6 +68,20 @@ class AuthContoller {
       next(error);
     }
   }
+  static async me(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const refreshToken = req?.cookies?.refreshToken; // 🍪 Cookie'den alınır
+      if (!refreshToken) {
+        throw new Error("Refresh token not provided");
+      }
+      // Servis çağrılır
+      const user = await AuthService.me(req.user.userId); // Eğer böyle bir servis yazdıysan
+
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default AuthContoller;

@@ -115,6 +115,24 @@ class AuthService {
       throw error;
     }
   }
+  static async me(userId: string) {
+    try {
+      const existingUser = await User.findOne({ _id: userId });
+      if (!existingUser) {
+        throw new Error("Refresh token invalid");
+      }
+
+      const {
+        password,
+        __v,
+        refreshToken: _,
+        ...userWithoutSensitiveData
+      } = existingUser.toObject();
+      return userWithoutSensitiveData;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default AuthService;
