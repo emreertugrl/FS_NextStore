@@ -1,14 +1,17 @@
 "use client";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
+
 const LoginSchema = Yup.object().shape({
   username: Yup.string().required("username zorunlu").trim(),
   password: Yup.string().min(6, "Şifre en az 6 karakter olmalı").required("Şifre zorunlu").trim(),
 });
 
 export default function LoginPage() {
+  const router = useRouter();
   const handleSubmit = async (values: any) => {
     try {
       const res = await fetch("http://localhost:3000/auth/login", {
@@ -21,14 +24,14 @@ export default function LoginPage() {
 
       // Giriş başarılıysa token'ı sakla
       if (res.ok) {
-        localStorage.setItem("accessToken", data.accessToken);
         toast.success("Giriş başarılı");
+        router.push("/");
       } else {
-        alert(data.message || "Giriş başarısız");
+        toast.error(data.message || "Giriş başarısız");
       }
     } catch (err) {
       console.error(err);
-      alert("Sunucu hatası");
+      toast.error("Sunucu hatası");
     }
   };
 
