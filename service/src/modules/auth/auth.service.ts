@@ -17,6 +17,7 @@ class AuthService {
   static async generateRefreshToken(user: any) {
     const payload = {
       userId: user._id.toString(),
+      role: user.role,
     };
     return jwt.sign(payload, process.env.JWT_REFRESH_SECRET!, {
       expiresIn: process.env.JWT_REFRESH_SECRET_EXPIRE!,
