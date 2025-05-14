@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 
-// Form verileri için tip tanımı
 type RegisterFormValues = {
   username: string;
   name: string;
@@ -14,7 +13,6 @@ type RegisterFormValues = {
   password: string;
 };
 
-// Yup şeması
 const RegisterSchema = Yup.object().shape({
   username: Yup.string().required("Kullanıcı adı zorunlu").trim(),
   name: Yup.string().required("İsim zorunlu").trim(),
@@ -34,8 +32,6 @@ export default function RegisterPage() {
       });
 
       const data = await res.json();
-      console.log(data);
-
       if (res.ok) {
         toast.success("Kayıt başarılı");
         router.push("/login");
@@ -49,71 +45,92 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="w-full max-w-sm mx-auto mt-10">
-      <h1 className="text-xl font-semibold mb-4">Kayıt Ol</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+      <div className="w-full max-w-md bg-white dark:bg-gray-800 shadow-lg rounded-xl p-8">
+        <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-6">
+          Kayıt Ol
+        </h1>
 
-      <Formik
-        initialValues={{
-          username: "",
-          name: "",
-          email: "",
-          password: "",
-        }}
-        validationSchema={RegisterSchema}
-        onSubmit={handleSubmit}
-      >
-        {() => (
-          <Form className="flex flex-col gap-4">
-            <div>
-              <Field
-                name="username"
-                placeholder="Kullanıcı adı"
-                className="w-full px-3 py-2 border rounded"
-              />
-              <ErrorMessage name="username" component="div" className="text-red-500 text-sm" />
-            </div>
+        <Formik
+          initialValues={{
+            username: "",
+            name: "",
+            email: "",
+            password: "",
+          }}
+          validationSchema={RegisterSchema}
+          onSubmit={handleSubmit}
+        >
+          {() => (
+            <Form className="space-y-5">
+              {/* Username */}
+              <div>
+                <Field
+                  name="username"
+                  placeholder="Kullanıcı adı"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
+                />
+                <ErrorMessage
+                  name="username"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
 
-            <div>
-              <Field name="name" placeholder="Adınız" className="w-full px-3 py-2 border rounded" />
-              <ErrorMessage name="name" component="div" className="text-red-500 text-sm" />
-            </div>
+              {/* Name */}
+              <div>
+                <Field
+                  name="name"
+                  placeholder="Adınız"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
+                />
+                <ErrorMessage name="name" component="div" className="text-red-500 text-sm mt-1" />
+              </div>
 
-            <div>
-              <Field
-                type="email"
-                name="email"
-                placeholder="Email"
-                className="w-full px-3 py-2 border rounded"
-              />
-              <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
-            </div>
+              {/* Email */}
+              <div>
+                <Field
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
+                />
+                <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
+              </div>
 
-            <div>
-              <Field
-                type="password"
-                name="password"
-                placeholder="Şifre"
-                className="w-full px-3 py-2 border rounded"
-              />
-              <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
-            </div>
+              {/* Password */}
+              <div>
+                <Field
+                  type="password"
+                  name="password"
+                  placeholder="Şifre"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
+                />
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
 
-            <button
-              type="submit"
-              className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-            >
-              Kayıt Ol
-            </button>
+              {/* Submit */}
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+              >
+                Kayıt Ol
+              </button>
 
-            <p className="text-sm text-center">
-              Zaten hesabınız var mı?{" "}
-              <Link href="/login" className="text-blue-600 hover:underline">
-                Giriş Yap
-              </Link>
-            </p>
-          </Form>
-        )}
-      </Formik>
+              <p className="text-sm text-center text-gray-600 dark:text-gray-300">
+                Zaten hesabınız var mı?{" "}
+                <Link href="/login" className="text-blue-600 hover:underline">
+                  Giriş Yap
+                </Link>
+              </p>
+            </Form>
+          )}
+        </Formik>
+      </div>
     </div>
   );
 }
