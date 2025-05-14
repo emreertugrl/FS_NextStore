@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 // Middleware importu
 import authRoutes from "./modules/auth/auth.routes.ts";
 import productRoute from "./modules/product/product.routes.ts";
+import categoryRoute from "./modules/category/category.routes.ts";
 import errorMiddleware from "./modules/middleware/errorHandler.ts";
 // Route modüllerinin importu
 
@@ -42,6 +43,7 @@ app.get("/", (req: Request, res: Response) => {
 // Uygulama routeları
 app.use("/auth", authRoutes);
 app.use("/product", productRoute);
+app.use("/category", categoryRoute);
 
 // Sunucu durumu kontrol rotası (health check)
 app.get("/health", (req: Request, res: Response) => {

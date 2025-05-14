@@ -6,7 +6,7 @@ export interface IProduct extends Document {
   price: number;
   image: string;
   brand?: string;
-  category?: string;
+  category: mongoose.Types.ObjectId; // 👈 Güncellendi
   countInStock: number;
   rating?: number;
   numReviews?: number;
@@ -39,8 +39,9 @@ const ProductSchema: Schema = new Schema<IProduct>(
       default: "",
     },
     category: {
-      type: String,
-      default: "",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category", // 👈 Referans verildi
+      required: [true, "Product category is required"],
     },
     countInStock: {
       type: Number,

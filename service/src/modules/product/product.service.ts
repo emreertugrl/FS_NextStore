@@ -1,12 +1,13 @@
 import Product from "./product.model.ts";
+import Category from "../category/category.model.ts";
 class ProductService {
   static async getAllProducts(filters: any) {
-    console.log(filters);
-
     try {
       const query: any = {};
       // 🔎 Filtreler
-      if (filters.category) query.category = filters.category;
+      // if (filters.category.name && mongoose.Types.ObjectId.isValid(filters.category)) {
+      //   query.category = filters.category.name;
+      // } embedding yönteminden dolayı çalışmıyor.
       if (filters.brand) query.brand = filters.brand;
       if (filters.isFeatured) query.isFeatured = filters.isFeatured === "true";
       if (filters.minPrice || filters.maxPrice) {
@@ -39,7 +40,7 @@ class ProductService {
       //   totalPages: Math.ceil(total / limit),
       //   products,
       // };
-      const products = await Product.find(query).sort(sortBy);
+      const products = await Product.find(query).sort(sortBy).populate("category");
 
       return products;
     } catch (error) {
@@ -49,8 +50,7 @@ class ProductService {
 
   static async getProductById(id: string) {
     try {
-      const product = await Product.findById(id);
-      console.log(product);
+      const product = await Product.findById(id).populate("category");
       if (!product) {
         throw new Error("Product not found");
       }
@@ -66,6 +66,12 @@ class ProductService {
       });
       if (existingProduct) {
         throw new Error("Product already exits");
+      }
+
+      // 🔎 Category ID doğrulaması
+      const categoryExists = await Category.findById(value.category);
+      if (!categoryExists) {
+        throw new Error("Invalid category ID");
       }
 
       const newProduct = new Product(value);
