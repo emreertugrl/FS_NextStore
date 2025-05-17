@@ -1,6 +1,7 @@
 // utils/axiosInstance.ts
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {REFRESH_URL} from './urls';
 
 const api = axios.create({
   baseURL: process.env.BASEURL,
@@ -29,26 +30,26 @@ api.interceptors.response.use(
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      !originalRequest.url.includes('/auth/refresh')
+      !originalRequest.url.includes(REFRESH_URL)
     ) {
       originalRequest._retry = true;
+      console.log(error);
 
       try {
         const refreshToken = await AsyncStorage.getItem('refreshToken');
+        console.log(refreshToken);
         if (!refreshToken) throw new Error('No refresh token');
 
         const response = await axios.post(
-          `${process.env.BASEURL}/auth/refresh`,
+          `${process.env.BASEURL}${REFRESH_URL}`,
           {
             refreshToken,
           },
         );
 
-        const {accessToken: newAccessToken, refreshToken: newRefreshToken} =
-          response.data;
+        const {accessToken: newAccessToken} = response.data;
 
         await AsyncStorage.setItem('accessToken', newAccessToken);
-        await AsyncStorage.setItem('refreshToken', newRefreshToken);
 
         // Yeni token ile tekrar dene
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;

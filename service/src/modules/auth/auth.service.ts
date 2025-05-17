@@ -113,6 +113,19 @@ class AuthService {
       const accessToken = await this.generateAccessToken(user);
       return { accessToken };
     } catch (error) {
+      if (error.name === "TokenExpiredError") {
+        const err = new Error("Refresh token expired");
+        // @ts-ignore
+        err.statusCode = 401;
+        throw err;
+      }
+
+      if (error.name === "JsonWebTokenError") {
+        const err = new Error("Invalid refresh token");
+        // @ts-ignore
+        err.statusCode = 403;
+        throw err;
+      }
       throw error;
     }
   }
