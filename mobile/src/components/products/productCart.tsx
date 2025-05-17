@@ -1,0 +1,58 @@
+import React from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {width} from '../../utils/function';
+
+const ProductCard: React.FC = ({item}) => {
+  return (
+    <TouchableOpacity style={styles.card}>
+      <Image source={{uri: item.image}} style={styles.image} />
+      <View style={styles.infoContainer}>
+        <Text style={styles.name} numberOfLines={1}>
+          {item.name}
+        </Text>
+        <Text style={styles.price}>${item.price.toFixed(2)}</Text>
+        <Text style={styles.rating}>
+          ⭐ {item.rating} ({item.numReviews})
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    margin: 8,
+    width: (width - 40) / 2,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  image: {
+    width: '100%',
+    height: 120,
+    resizeMode: 'cover',
+  },
+  infoContainer: {
+    padding: 8,
+  },
+  name: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  price: {
+    fontSize: 13,
+    color: '#1e90ff',
+    marginVertical: 4,
+  },
+  rating: {
+    fontSize: 12,
+    color: '#777',
+  },
+});
+export default ProductCard;
