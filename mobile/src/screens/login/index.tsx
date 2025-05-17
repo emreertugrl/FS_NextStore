@@ -1,5 +1,4 @@
-// screens/LoginScreen.tsx
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -12,11 +11,8 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useNavigation} from '@react-navigation/native';
 import Routes from '../../utils/routes';
-import {useAppDispatch} from '../../store/hooks';
-import {loginSuccess, setTokens} from '../../store/slices/authSlice';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {postRequest} from '../../service/verbs';
-import {LOGIN_URL} from '../../service/urls';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import {loginThunk} from '../../store/actions/authActions';
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string().required('Kullanıcı adı zorunlu'),
@@ -29,35 +25,15 @@ const LoginScreen: React.FC = () => {
 
   const handleLogin = async (values: {username: string; password: string}) => {
     try {
-      const response = await postRequest(LOGIN_URL, values);
-      const {accessToken, refreshToken, user} = response.data;
+      const result = await dispatch(loginThunk(values)).unwrap(); // ✅ unwrap ile doğrudan veriye eriş
 
-      // Token'ları sakla
-      await AsyncStorage.setItem('accessToken', accessToken);
-      await AsyncStorage.setItem('refreshToken', refreshToken);
-
-      // Redux'a token'ları aktar
-      dispatch(setTokens({accessToken, refreshToken}));
-      dispatch(loginSuccess({accessToken, refreshToken, user}));
-
-      Alert.alert('Başarılı', `Hoş geldin, ${user.name}`);
-      navigation.navigate(Routes.TAB);
+      Alert.alert('Başarılı', `Hoş geldin, ${result.user.name}`);
+      navigation.navigate(Routes.TAB); // veya Routes.HOME, yapına göre
     } catch (error: any) {
-      console.log(error.response?.data || error.message);
-      Alert.alert('Hata', 'Bir hata oluştu');
+      console.log('Login error:', error);
+      Alert.alert('Hata', error || 'Giriş başarısız');
     }
   };
-
-  useEffect(() => {
-    const checkTokens = async () => {
-      const accessToken = await AsyncStorage.getItem('accessToken');
-      const refreshToken = await AsyncStorage.getItem('refreshToken');
-      if (accessToken && refreshToken) {
-        dispatch(setTokens({accessToken, refreshToken}));
-      }
-    };
-    checkTokens();
-  }, []);
 
   return (
     <View style={styles.container}>

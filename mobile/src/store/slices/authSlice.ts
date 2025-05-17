@@ -1,5 +1,5 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {getMe} from '../actions/authActions';
+import {createSlice} from '@reduxjs/toolkit';
+import {getMe, loginThunk, logoutThunk} from '../actions/authActions';
 
 interface AuthState {
   accessToken: string | null;
@@ -18,34 +18,35 @@ const initialState: AuthState = {
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {
-    loginSuccess(
-      state,
-      action: PayloadAction<{
-        accessToken: string;
-        refreshToken: string;
-        user: any;
-      }>,
-    ) {
-      state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
-      state.user = action.payload.user;
-    },
-    logout(state) {
-      state.accessToken = null;
-      state.refreshToken = null;
-      state.user = null;
-    },
-    setTokens(
-      state,
-      action: PayloadAction<{accessToken: string; refreshToken: string}>,
-    ) {
-      state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
-    },
-  },
+  reducers: {},
   extraReducers: builder => {
     builder
+      .addCase(loginThunk.pending, state => {
+        state.loading = true;
+      })
+      .addCase(loginThunk.fulfilled, (state, action) => {
+        state.refreshToken = action.payload.refreshToken;
+        state.accessToken = action.payload.accessToken;
+        state.user = action.payload.user;
+        state.loading = false;
+      })
+      .addCase(loginThunk.rejected, state => {
+        state.user = null;
+        state.loading = false;
+      })
+      .addCase(logoutThunk.pending, state => {
+        state.loading = true;
+      })
+      .addCase(logoutThunk.fulfilled, (state, action) => {
+        state.user = null;
+        state.refreshToken = null;
+        state.accessToken = null;
+        state.loading = false;
+      })
+      .addCase(logoutThunk.rejected, state => {
+        state.user = null;
+        state.loading = false;
+      })
       .addCase(getMe.pending, state => {
         state.loading = true;
       })
@@ -60,5 +61,5 @@ const authSlice = createSlice({
   },
 });
 
-export const {loginSuccess, logout, setTokens} = authSlice.actions;
+export const {} = authSlice.actions;
 export default authSlice.reducer;
