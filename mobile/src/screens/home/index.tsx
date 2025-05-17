@@ -2,10 +2,13 @@ import React, {useEffect} from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
 import ProductCard from '../../components/products/productCart';
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
-import {getProducts} from '../../store/actions/productActions';
+import {getProduct, getProducts} from '../../store/actions/productActions';
+import {useNavigation} from '@react-navigation/native';
+import Routes from '../../utils/routes';
 
 const Home: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigation = useNavigation();
   const {products} = useAppSelector(state => state.product);
   useEffect(() => {
     dispatch(getProducts());
@@ -19,7 +22,15 @@ const Home: React.FC = () => {
         keyExtractor={item => item._id}
         numColumns={2}
         contentContainerStyle={styles.listContainer}
-        renderItem={({item}) => <ProductCard item={item} />}
+        renderItem={({item}) => (
+          <ProductCard
+            navigation={() => {
+              dispatch(getProduct(item._id));
+              navigation.navigate(Routes.PRODUCTDETAIL);
+            }}
+            item={item}
+          />
+        )}
       />
     </View>
   );

@@ -4,6 +4,7 @@ enum Routes {
   TAB = 'Tab',
   PROFILE = 'Profile',
   HOME = 'Home',
+  PRODUCTDETAIL = 'Product Detail',
 }
 
 export default Routes;

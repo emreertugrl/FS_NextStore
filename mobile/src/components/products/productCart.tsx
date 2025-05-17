@@ -2,9 +2,9 @@ import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {width} from '../../utils/function';
 
-const ProductCard: React.FC = ({item}) => {
+const ProductCard: React.FC = ({item, navigation}) => {
   return (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity onPress={navigation} style={styles.card}>
       <Image source={{uri: item.image}} style={styles.image} />
       <View style={styles.infoContainer}>
         <Text style={styles.name} numberOfLines={1}>
