@@ -8,6 +8,6 @@ router.post("/register", AuthContoller.register);
 router.post("/refresh", AuthContoller.refresh);
 router.post("/login", AuthContoller.login);
 router.post("/logout", AuthContoller.logout);
-router.post("/me", authMiddleware, AuthContoller.me);
+router.get("/me", authMiddleware, AuthContoller.me);
 
 export default router;
