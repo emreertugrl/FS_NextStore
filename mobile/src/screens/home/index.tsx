@@ -1,10 +1,26 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useEffect} from 'react';
+import {View, FlatList, StyleSheet} from 'react-native';
+import ProductCard from '../../components/products/productCart';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import {getProducts} from '../../store/actions/productActions';
 
-const Home = () => {
+const Home: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const {products} = useAppSelector(state => state.product);
+  useEffect(() => {
+    dispatch(getProducts());
+  }, []);
+  console.log(products);
+
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
+      <FlatList
+        data={products}
+        keyExtractor={item => item._id}
+        numColumns={2}
+        contentContainerStyle={styles.listContainer}
+        renderItem={({item}) => <ProductCard item={item} />}
+      />
     </View>
   );
 };
@@ -12,8 +28,10 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#f2f2f2',
+  },
+  listContainer: {
+    padding: 10,
   },
 });
 

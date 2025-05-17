@@ -4,3 +4,5 @@ export const LOGIN_URL = '/auth/login';
 export const REFRESH_URL = '/auth/refresh';
 export const LOGOUT_URL = '/auth/logout';
 export const ME_URL = '/auth/me';
+export const GET_PRODUCTS_URL = '/product';
+export const GET_PRODUCT_URL = '/product';
