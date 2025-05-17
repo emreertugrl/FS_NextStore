@@ -28,7 +28,7 @@ class AuthContoller {
           maxAge: 7 * 24 * 60 * 60 * 1000, // 7 gün
         })
         .status(200)
-        .json({ user, accessToken });
+        .json({ user, accessToken, refreshToken });
     } catch (error) {
       next(error);
     }
