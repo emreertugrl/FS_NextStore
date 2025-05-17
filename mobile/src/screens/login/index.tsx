@@ -1,5 +1,5 @@
 // screens/LoginScreen.tsx
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,11 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useNavigation} from '@react-navigation/native';
 import Routes from '../../utils/routes';
+import {useAppDispatch} from '../../store/hooks';
+import {loginSuccess, setTokens} from '../../store/slices/authSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {postRequest} from '../../service/verbs';
+import {LOGIN_URL} from '../../service/urls';
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string().required('Kullanıcı adı zorunlu'),
@@ -19,29 +24,40 @@ const LoginSchema = Yup.object().shape({
 });
 
 const LoginScreen: React.FC = () => {
+  const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
   const handleLogin = async (values: {username: string; password: string}) => {
     try {
-      const response = await fetch(`${process.env.BASEURL}/auth/login`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(values),
-      });
+      const response = await postRequest(LOGIN_URL, values);
+      const {accessToken, refreshToken, user} = response.data;
 
-      const result = await response.json();
-      console.log(result);
+      // Token'ları sakla
+      await AsyncStorage.setItem('accessToken', accessToken);
+      await AsyncStorage.setItem('refreshToken', refreshToken);
 
-      if (response.ok) {
-        Alert.alert('Başarılı', `Hoş geldin, ${result.user.name}`);
-        navigation.navigate(Routes.TAB);
-      } else {
-        Alert.alert('Hata', result.message || 'Giriş başarısız');
-      }
-    } catch (error) {
+      // Redux'a token'ları aktar
+      dispatch(setTokens({accessToken, refreshToken}));
+      dispatch(loginSuccess({accessToken, refreshToken, user}));
+
+      Alert.alert('Başarılı', `Hoş geldin, ${user.name}`);
+      navigation.navigate(Routes.TAB);
+    } catch (error: any) {
+      console.log(error.response?.data || error.message);
       Alert.alert('Hata', 'Bir hata oluştu');
     }
   };
+
+  useEffect(() => {
+    const checkTokens = async () => {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      const refreshToken = await AsyncStorage.getItem('refreshToken');
+      if (accessToken && refreshToken) {
+        dispatch(setTokens({accessToken, refreshToken}));
+      }
+    };
+    checkTokens();
+  }, []);
 
   return (
     <View style={styles.container}>

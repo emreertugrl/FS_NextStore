@@ -70,7 +70,7 @@ class AuthContoller {
   }
   static async me(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const refreshToken = req?.cookies?.refreshToken; // 🍪 Cookie'den alınır
+      const refreshToken = req?.cookies?.refreshToken || req.refreshToken; // 🍪 Cookie'den alınır
       if (!refreshToken) {
         throw new Error("Refresh token not provided");
       }
