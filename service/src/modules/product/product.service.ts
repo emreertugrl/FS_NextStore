@@ -1,5 +1,6 @@
 import Product from "./product.model.ts";
 import Category from "../category/category.model.ts";
+import mongoose from "mongoose";
 class ProductService {
   static async getAllProducts(filters: any) {
     try {
@@ -8,6 +9,9 @@ class ProductService {
       // if (filters.category.name && mongoose.Types.ObjectId.isValid(filters.category)) {
       //   query.category = filters.category.name;
       // } embedding yönteminden dolayı çalışmıyor.
+      if (filters.category && mongoose.Types.ObjectId.isValid(filters.category)) {
+        query.category = filters.category;
+      }
       if (filters.brand) query.brand = filters.brand;
       if (filters.isFeatured) query.isFeatured = filters.isFeatured === "true";
       if (filters.minPrice || filters.maxPrice) {
