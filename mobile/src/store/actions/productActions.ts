@@ -3,15 +3,18 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import {getRequest} from '../../service/verbs';
 import {GET_PRODUCT_URL, GET_PRODUCTS_URL} from '../../service/urls';
 
-export const getProducts = createAsyncThunk('auth/getProducts', async () => {
-  try {
-    const response = await getRequest(GET_PRODUCTS_URL, {});
-    console.log(response);
-    return response.data;
-  } catch (error: any) {
-    console.log(error);
-  }
-});
+export const getProducts = createAsyncThunk(
+  'auth/getProducts',
+  async (filters?: any) => {
+    try {
+      const response = await getRequest(GET_PRODUCTS_URL, {params: filters});
+      console.log(response);
+      return response.data;
+    } catch (error: any) {
+      console.log(error);
+    }
+  },
+);
 
 export const getProduct = createAsyncThunk(
   'auth/getProduct',

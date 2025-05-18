@@ -1,22 +1,38 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
 import ProductCard from '../../components/products/productCart';
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {getProduct, getProducts} from '../../store/actions/productActions';
 import {useNavigation} from '@react-navigation/native';
 import Routes from '../../utils/routes';
+import {getCategories} from '../../store/actions/categoryActions';
+import ProductListHeaderComponent from '../../components/products/productListHeaderComponent';
 
 const Home: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const {products} = useAppSelector(state => state.product);
+  const {categories, category} = useAppSelector(state => state.category);
   useEffect(() => {
-    dispatch(getProducts());
+    dispatch(getProducts({}));
+
+    dispatch(getCategories());
   }, []);
+
+  useEffect(() => {
+    if (category.name === 'All') {
+      dispatch(getProducts()); // Tüm ürünler
+    } else {
+      dispatch(getProducts({category: category._id})); // Filtreli ürünler
+    }
+  }, [category._id, dispatch]);
 
   return (
     <View style={styles.container}>
       <FlatList
+        ListHeaderComponent={
+          <ProductListHeaderComponent categories={categories} />
+        }
         data={products}
         keyExtractor={item => item._id}
         numColumns={2}
