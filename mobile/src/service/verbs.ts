@@ -1,7 +1,7 @@
 import api from './instance';
 
 export async function getRequest(URL: string, params: object): Promise<any> {
-  const response = await api.get(URL, {params: params});
+  const response = await api.get(URL, params);
   return response;
 }
 export async function postRequest(URL: string, params: object): Promise<any> {
