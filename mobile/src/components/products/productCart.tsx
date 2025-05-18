@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {width} from '../../utils/function';
 
@@ -55,4 +55,4 @@ const styles = StyleSheet.create({
     color: '#777',
   },
 });
-export default ProductCard;
+export default memo(ProductCard);

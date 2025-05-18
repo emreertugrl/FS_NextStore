@@ -1,14 +1,6 @@
 // screens/ProductDetail.tsx
-import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  ScrollView,
-  Button,
-  ActivityIndicator,
-} from 'react-native';
+import React, {memo} from 'react';
+import {View, Text, Image, StyleSheet, ScrollView, Button} from 'react-native';
 import {useAppSelector} from '../../store/hooks';
 
 const ProductDetail = () => {
@@ -78,4 +70,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductDetail;
+export default memo(ProductDetail);

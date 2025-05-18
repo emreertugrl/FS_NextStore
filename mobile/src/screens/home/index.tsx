@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
 import ProductCard from '../../components/products/productCart';
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
@@ -13,7 +13,6 @@ const Home: React.FC = () => {
   useEffect(() => {
     dispatch(getProducts());
   }, []);
-  console.log(products);
 
   return (
     <View style={styles.container}>
@@ -21,6 +20,12 @@ const Home: React.FC = () => {
         data={products}
         keyExtractor={item => item._id}
         numColumns={2}
+        initialNumToRender={6} // Başta kaç ürün render edilsin
+        maxToRenderPerBatch={6} // Her seferinde kaç ürün render edilsin
+        windowSize={5} // Görünüm penceresi optimizasyonu
+        removeClippedSubviews={true} // Görünmeyenleri hafızadan çıkar
+        showsVerticalScrollIndicator={false}
+        columnWrapperStyle={styles.columnWrapper} // Aralarındaki boşluk
         contentContainerStyle={styles.listContainer}
         renderItem={({item}) => (
           <ProductCard
@@ -43,6 +48,10 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     padding: 10,
+  },
+  columnWrapper: {
+    justifyContent: 'space-between',
+    marginBottom: 16,
   },
 });
 
