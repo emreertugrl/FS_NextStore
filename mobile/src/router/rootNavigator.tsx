@@ -6,6 +6,7 @@ import Login from '../screens/login';
 import Routes from '../utils/routes';
 import {useAppSelector} from '../store/hooks';
 import ProductDetail from '../screens/products/productDetail';
+import FilterScreen from '../screens/filter';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,13 @@ function RootNavigator() {
             }}
             name={Routes.PRODUCTDETAIL}
             component={ProductDetail}
+          />
+          <Stack.Screen
+            options={{
+              headerShown: true,
+            }}
+            name={Routes.FILTER}
+            component={FilterScreen}
           />
         </>
       ) : (

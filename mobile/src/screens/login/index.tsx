@@ -40,7 +40,7 @@ const LoginScreen: React.FC = () => {
       <Text style={styles.title}>Giriş Yap</Text>
 
       <Formik
-        initialValues={{username: '', password: ''}}
+        initialValues={{username: 'Emre7', password: 'Test123.'}}
         validationSchema={LoginSchema}
         onSubmit={handleLogin}>
         {({
