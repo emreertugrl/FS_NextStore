@@ -59,6 +59,7 @@ class AuthService {
       const existingUser = await User.findOne({ username: userData.username });
       if (!existingUser) {
         throw new Error("Invalid credentials");
+        return;
       }
 
       const isMatch = await existingUser.comparePassword(userData.password);
@@ -169,6 +170,18 @@ class AuthService {
       }
 
       await existingUser.save();
+
+      return existingUser.favorites;
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async getUserFavorites(userId: string) {
+    try {
+      const existingUser = await User.findOne({ _id: userId }).populate("favorites");
+      if (!existingUser) {
+        throw new Error("User not found");
+      }
 
       return existingUser.favorites;
     } catch (error) {

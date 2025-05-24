@@ -84,16 +84,28 @@ class AuthContoller {
   }
   static async addRemoveFavourites(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const refreshToken = req?.cookies?.refreshToken || req.refreshToken; // 🍪 Cookie'den alınır
       const { productId } = req?.params;
 
-      if (!refreshToken) {
-        throw new Error("Refresh token not provided");
-      }
       // Servis çağrılır
       const favourites = await AuthService.addRemoveFavourites(req.user.userId, productId); // Eğer böyle bir servis yazdıysan
 
       res.status(200).json(favourites);
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async getUserFavorites(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req?.params;
+      console.log(id);
+      console.log(req.user);
+
+      if (req.user.userId !== id) {
+        throw new Error("User id isn't defined");
+      }
+      const getUserFavorites = await AuthService.getUserFavorites(req.user.userId); // Eğer böyle bir servis yazdıysan
+
+      res.status(200).json(getUserFavorites);
     } catch (error) {
       next(error);
     }

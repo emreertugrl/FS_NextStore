@@ -56,3 +56,15 @@ export const favoutireProduct = createAsyncThunk(
     }
   },
 );
+
+export const getUserFavorites = createAsyncThunk(
+  'auth/getUserFavorites',
+  async userId => {
+    try {
+      const response = await getRequest(`/auth/${userId}/favourites`, {});
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+);

@@ -8,6 +8,7 @@ import {logoutThunk} from '../store/actions/authActions';
 import {useAppDispatch} from '../store/hooks';
 import {FilterAdd, Logout} from 'iconsax-react-nativejs';
 import {useNavigation} from '@react-navigation/native';
+import Favorites from '../screens/favorites';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,6 +30,7 @@ export default function TabNavigator() {
         name={Routes.HOME}
         component={Home}
       />
+      <Tab.Screen name={Routes.FAVORITES} component={Favorites} />
       <Tab.Screen
         options={{
           headerRight: () => (

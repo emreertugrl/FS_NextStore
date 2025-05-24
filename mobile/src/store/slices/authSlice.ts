@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import {
   favoutireProduct,
   getMe,
+  getUserFavorites,
   loginThunk,
   logoutThunk,
 } from '../actions/authActions';
@@ -19,6 +20,7 @@ const initialState: AuthState = {
   refreshToken: null,
   user: null,
   loading: false,
+  favorites: [],
 };
 
 const authSlice = createSlice({
@@ -73,6 +75,17 @@ const authSlice = createSlice({
       })
       .addCase(favoutireProduct.rejected, state => {
         state.user.favorites = [];
+        state.loading = false;
+      })
+      .addCase(getUserFavorites.pending, state => {
+        state.loading = true;
+      })
+      .addCase(getUserFavorites.fulfilled, (state, action) => {
+        state.favorites = action.payload;
+        state.loading = false;
+      })
+      .addCase(getUserFavorites.rejected, state => {
+        state.favorites = [];
         state.loading = false;
       });
   },
