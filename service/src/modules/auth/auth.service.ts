@@ -1,3 +1,4 @@
+import Product from "../product/product.model.ts";
 import { UserLoginDto, UserRegisterDto } from "./auth.dto.ts";
 import User from "./auth.model.ts";
 import jwt from "jsonwebtoken";
@@ -143,6 +144,33 @@ class AuthService {
         ...userWithoutSensitiveData
       } = existingUser.toObject();
       return userWithoutSensitiveData;
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async addRemoveFavourites(userId: string, productId: string) {
+    try {
+      const existingUser = await User.findOne({ _id: userId });
+      if (!existingUser) {
+        throw new Error("Refresh token invalid");
+      }
+      const existingProduct = await Product.findOne({ _id: productId });
+      if (!existingProduct) {
+        throw new Error("Product not found");
+      }
+      const index = existingUser.favorites.indexOf(productId as any);
+
+      if (index === -1) {
+        // Favorilere ekle
+        existingUser.favorites.push(productId as any);
+      } else {
+        // Favorilerden çıkar
+        existingUser.favorites.splice(index, 1);
+      }
+
+      await existingUser.save();
+
+      return existingUser.favorites;
     } catch (error) {
       throw error;
     }

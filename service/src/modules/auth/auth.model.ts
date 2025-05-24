@@ -1,4 +1,4 @@
-import { model, Schema, Document } from "mongoose";
+import mongoose, { model, Schema, Document } from "mongoose";
 import bcrypt from "bcryptjs";
 
 // Kullanıcı interface'ı
@@ -9,6 +9,7 @@ interface IUser extends Document {
   password: string;
   role: string;
   refreshToken: string;
+  favorites: [{ type: mongoose.Schema.Types.ObjectId; ref: "Product" }];
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 // Kullanıcı şeması
@@ -23,6 +24,7 @@ const userSchema = new Schema<IUser>(
       type: String,
       default: null,
     },
+    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
   },
   {
     timestamps: true, // Yaratılma ve güncellenme zamanlarını otomatik ekler

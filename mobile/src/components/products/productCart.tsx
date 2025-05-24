@@ -1,10 +1,29 @@
 import React, {memo} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {width} from '../../utils/function';
+import {useAppSelector} from '../../store/hooks';
+import {Heart} from 'iconsax-react-nativejs';
 
 const ProductCard: React.FC = ({item, navigation}) => {
+  const {favorites} = useAppSelector(state => state.auth);
+  const favouritedProduct = favorites.find(fav => fav === item._id);
+
   return (
     <TouchableOpacity onPress={navigation} style={styles.card}>
+      {favouritedProduct && (
+        <View
+          style={{
+            position: 'absolute',
+            right: 10,
+            top: 10,
+            zIndex: 100,
+            backgroundColor: 'white',
+            padding: 5,
+            borderRadius: 100,
+          }}>
+          {<Heart size={25} color="red" variant="Bold" />}
+        </View>
+      )}
       <Image source={{uri: item.image}} style={styles.image} />
       <View style={styles.infoContainer}>
         <Text style={styles.name} numberOfLines={1}>

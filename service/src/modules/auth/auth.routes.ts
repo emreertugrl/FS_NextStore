@@ -9,5 +9,6 @@ router.post("/refresh", AuthContoller.refresh);
 router.post("/login", AuthContoller.login);
 router.post("/logout", AuthContoller.logout);
 router.get("/me", authMiddleware, AuthContoller.me);
+router.put("/favourites/:productId", authMiddleware, AuthContoller.addRemoveFavourites);
 
 export default router;

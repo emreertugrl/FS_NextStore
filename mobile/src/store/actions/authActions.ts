@@ -1,7 +1,12 @@
 // store/actions/authActions.ts
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {getRequest, postRequest} from '../../service/verbs';
-import {LOGIN_URL, LOGOUT_URL, ME_URL} from '../../service/urls';
+import {getRequest, postRequest, putRequest} from '../../service/verbs';
+import {
+  FAVOURITES_URL,
+  LOGIN_URL,
+  LOGOUT_URL,
+  ME_URL,
+} from '../../service/urls';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const getMe = createAsyncThunk('auth/getMe', async () => {
@@ -39,3 +44,15 @@ export const logoutThunk = createAsyncThunk('auth/logout', async () => {
     console.log(error);
   }
 });
+
+export const favoutireProduct = createAsyncThunk(
+  'auth/favoutireProduct',
+  async productId => {
+    try {
+      const response = await putRequest(`${FAVOURITES_URL}/${productId}`, {});
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+);

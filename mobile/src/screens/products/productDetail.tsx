@@ -1,14 +1,45 @@
-// screens/ProductDetail.tsx
 import React, {memo} from 'react';
-import {View, Text, Image, StyleSheet, ScrollView, Button} from 'react-native';
-import {useAppSelector} from '../../store/hooks';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Button,
+  TouchableOpacity,
+} from 'react-native';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import {Heart} from 'iconsax-react-nativejs';
+import {favoutireProduct} from '../../store/actions/authActions';
 
 const ProductDetail = () => {
   const {product} = useAppSelector(state => state.product);
-  console.log(product);
+  const {favorites} = useAppSelector(state => state.auth);
+  const dispatch = useAppDispatch();
+
+  const favouritedProduct = favorites.find(item => item === product._id);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <TouchableOpacity
+        onPress={() => dispatch(favoutireProduct(product._id))}
+        style={{
+          position: 'absolute',
+          right: 30,
+          top: 30,
+          zIndex: 100,
+          backgroundColor: 'white',
+          padding: 10,
+          borderRadius: 100,
+        }}>
+        {
+          <Heart
+            size={30}
+            color="red"
+            variant={favouritedProduct ? 'Bold' : 'Outline'}
+          />
+        }
+      </TouchableOpacity>
       <Image source={{uri: product.image}} style={styles.image} />
       <View style={styles.content}>
         <Text style={styles.name}>{product.name}</Text>

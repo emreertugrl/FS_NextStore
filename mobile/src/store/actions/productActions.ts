@@ -8,7 +8,6 @@ export const getProducts = createAsyncThunk(
   async (filters?: any) => {
     try {
       const response = await getRequest(GET_PRODUCTS_URL, {params: filters});
-      console.log(response);
       return response.data;
     } catch (error: any) {
       console.log(error);
