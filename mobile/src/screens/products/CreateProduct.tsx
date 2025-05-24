@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useLayoutEffect} from 'react';
 import {
   View,
   Text,
@@ -12,10 +12,12 @@ import {
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import uploadToCloudinary from '../../components/uploadToImageKit';
-import {CREATE_PRODUCT_URL} from '../../service/urls';
-import {postRequest} from '../../service/verbs';
-import {useAppSelector} from '../../store/hooks';
+import {CREATE_PRODUCT_URL, UPDATE_PRODUCT_URL} from '../../service/urls';
+import {postRequest, putRequest} from '../../service/verbs';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {Picker} from '@react-native-picker/picker';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {getProducts, updateProduct} from '../../store/actions/productActions';
 
 const ProductSchema = Yup.object().shape({
   name: Yup.string().required('Ürün adı gerekli'),
@@ -33,12 +35,25 @@ const ProductSchema = Yup.object().shape({
 });
 
 const CreateProductScreen: React.FC = () => {
+  const route = useRoute();
+  const {product} = route.params || {};
+  const navigation = useNavigation();
+
   const {categories} = useAppSelector(state => state.category);
   const handleSubmit = async (values: any) => {
     try {
-      // Sadece values objesini gönderiyoruz
-      const response = await postRequest(CREATE_PRODUCT_URL, values);
-      console.log('Ürün oluşturuldu:', response);
+      if (product) {
+        const response = await putRequest(
+          `${UPDATE_PRODUCT_URL}/${product._id}`,
+          values,
+        );
+        console.log(response);
+        navigation.goBack();
+      } else {
+        const response = await postRequest(CREATE_PRODUCT_URL, values);
+
+        console.log('Ürün oluşturuldu:', response);
+      }
     } catch (error: any) {
       console.error(
         'API hatası:',
@@ -46,21 +61,28 @@ const CreateProductScreen: React.FC = () => {
       );
     }
   };
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: product ? 'Product Update' : 'Add New Product',
+    });
+  }, [navigation, product]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Ürün Ekle</Text>
+      <Text style={styles.title}>
+        {product ? 'Ürünü Güncelle' : 'Ürün Ekle'}
+      </Text>
 
       <Formik
         initialValues={{
-          name: '',
-          description: '',
-          price: '',
-          image: '',
-          brand: '',
-          category: '',
-          countInStock: '',
-          isFeatured: false,
+          name: product?.name || '',
+          description: product?.description || '',
+          price: product?.price?.toString() || '',
+          image: product?.image || '',
+          brand: product?.brand || '',
+          category: product?.category?._id || '',
+          countInStock: product?.countInStock?.toString() || '',
+          isFeatured: product?.isFeatured || false,
         }}
         validationSchema={ProductSchema}
         onSubmit={handleSubmit}>
@@ -185,7 +207,9 @@ const CreateProductScreen: React.FC = () => {
             </View>
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.buttonText}>Ürünü Kaydet</Text>
+              <Text style={styles.buttonText}>
+                {product ? 'Güncelle' : 'Kaydet'}
+              </Text>
             </TouchableOpacity>
           </>
         )}

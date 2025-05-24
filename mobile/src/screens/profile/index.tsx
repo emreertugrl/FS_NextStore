@@ -46,20 +46,36 @@ const Profile = () => {
           </Text>
         </View>
         {admin && (
-          <TouchableOpacity
-            onPress={() => navigation.navigate(Routes.CREATEPRODUCT)}
-            style={{
-              backgroundColor: '#4CAF50',
-              paddingVertical: 10,
-              paddingHorizontal: 20,
-              borderRadius: 8,
-              alignItems: 'center',
-              marginVertical: 10,
-            }}>
-            <Text style={{color: '#fff', fontSize: 16, fontWeight: 'bold'}}>
-              Ürün Ekle
-            </Text>
-          </TouchableOpacity>
+          <>
+            <TouchableOpacity
+              onPress={() => navigation.navigate(Routes.PRODUCTS)}
+              style={{
+                backgroundColor: '#00ff',
+                paddingVertical: 10,
+                paddingHorizontal: 20,
+                borderRadius: 8,
+                alignItems: 'center',
+                marginVertical: 10,
+              }}>
+              <Text style={{color: '#fff', fontSize: 16, fontWeight: 'bold'}}>
+                Ürünleri Gör
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate(Routes.CREATEPRODUCT)}
+              style={{
+                backgroundColor: '#4CAF50',
+                paddingVertical: 10,
+                paddingHorizontal: 20,
+                borderRadius: 8,
+                alignItems: 'center',
+                marginVertical: 10,
+              }}>
+              <Text style={{color: '#fff', fontSize: 16, fontWeight: 'bold'}}>
+                Ürün Ekle
+              </Text>
+            </TouchableOpacity>
+          </>
         )}
       </View>
     </View>

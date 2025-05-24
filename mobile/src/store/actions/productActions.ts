@@ -1,7 +1,11 @@
 // store/actions/authActions.ts
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {getRequest} from '../../service/verbs';
-import {GET_PRODUCT_URL, GET_PRODUCTS_URL} from '../../service/urls';
+import {getRequest, putRequest} from '../../service/verbs';
+import {
+  GET_PRODUCT_URL,
+  GET_PRODUCTS_URL,
+  UPDATE_PRODUCT_URL,
+} from '../../service/urls';
 
 export const getProducts = createAsyncThunk(
   'auth/getProducts',

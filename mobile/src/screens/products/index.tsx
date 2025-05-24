@@ -1,25 +1,25 @@
-//import liraries
-import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useEffect} from 'react';
+import {FlatList} from 'react-native';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import {ProductAdminCard} from '../../components/products/productAdminCard';
+import {getProducts} from '../../store/actions/productActions';
 
-// create a component
-const Products = () => {
+const Products: React.FC = () => {
+  const {products} = useAppSelector(state => state.product);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [products]);
+
   return (
-    <View style={styles.container}>
-      <Text>Products</Text>
-    </View>
+    <FlatList
+      data={products}
+      keyExtractor={item => item._id}
+      renderItem={({item}) => <ProductAdminCard item={item} />}
+      contentContainerStyle={{padding: 16}}
+    />
   );
 };
 
-// define your styles
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#2c3e50',
-  },
-});
-
-//make this component available to the app
 export default Products;

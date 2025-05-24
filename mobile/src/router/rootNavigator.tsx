@@ -42,6 +42,13 @@ function RootNavigator() {
             options={{
               headerShown: true,
             }}
+            name={Routes.PRODUCTS}
+            component={Products}
+          />
+          <Stack.Screen
+            options={{
+              headerShown: true,
+            }}
             name={Routes.CREATEPRODUCT}
             component={CreateProductScreen}
           />
