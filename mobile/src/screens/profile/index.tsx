@@ -1,13 +1,16 @@
-import React, {useEffect} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import React from 'react';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {format} from 'date-fns';
-import {getMe} from '../../store/actions/authActions';
+import {useNavigation} from '@react-navigation/native';
+import Routes from '../../utils/routes';
 
 const Profile = () => {
   const dispatch = useAppDispatch();
+  const navigation = useNavigation();
   const {user} = useAppSelector(state => state.auth);
   if (!user) return null;
+  const admin = user.role === 'Admin';
 
   return (
     <View style={styles.container}>
@@ -42,6 +45,22 @@ const Profile = () => {
             {format(new Date(user.createdAt), 'dd MMMM yyyy')}
           </Text>
         </View>
+        {admin && (
+          <TouchableOpacity
+            onPress={() => navigation.navigate(Routes.CREATEPRODUCT)}
+            style={{
+              backgroundColor: '#4CAF50',
+              paddingVertical: 10,
+              paddingHorizontal: 20,
+              borderRadius: 8,
+              alignItems: 'center',
+              marginVertical: 10,
+            }}>
+            <Text style={{color: '#fff', fontSize: 16, fontWeight: 'bold'}}>
+              Ürün Ekle
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

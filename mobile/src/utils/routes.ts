@@ -6,6 +6,7 @@ enum Routes {
   FAVORITES = 'Favorites',
   HOME = 'Home',
   PRODUCTDETAIL = 'Product Detail',
+  CREATEPRODUCT = 'Create Product',
   FILTER = 'Filter',
 }
 

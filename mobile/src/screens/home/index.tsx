@@ -17,7 +17,7 @@ const Home: React.FC = () => {
     dispatch(getProducts({}));
 
     dispatch(getCategories());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (category.name === 'All') {
