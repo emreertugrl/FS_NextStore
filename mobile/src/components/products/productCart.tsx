@@ -5,8 +5,8 @@ import {useAppSelector} from '../../store/hooks';
 import {Heart} from 'iconsax-react-nativejs';
 
 const ProductCard: React.FC = ({item, navigation}) => {
-  const {favorites} = useAppSelector(state => state.auth);
-  const favouritedProduct = favorites.find(fav => fav === item._id);
+  const {user} = useAppSelector(state => state.auth);
+  const favouritedProduct = user.favorites.find(fav => fav === item._id);
 
   return (
     <TouchableOpacity onPress={navigation} style={styles.card}>

@@ -19,7 +19,6 @@ const initialState: AuthState = {
   refreshToken: null,
   user: null,
   loading: false,
-  favorites: [],
 };
 
 const authSlice = createSlice({
@@ -69,11 +68,11 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(favoutireProduct.fulfilled, (state, action) => {
-        state.favorites = action.payload;
+        state.user.favorites = action.payload;
         state.loading = false;
       })
       .addCase(favoutireProduct.rejected, state => {
-        state.favorites = [];
+        state.user.favorites = [];
         state.loading = false;
       });
   },

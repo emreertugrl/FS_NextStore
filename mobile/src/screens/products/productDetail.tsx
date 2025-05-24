@@ -14,10 +14,10 @@ import {favoutireProduct} from '../../store/actions/authActions';
 
 const ProductDetail = () => {
   const {product} = useAppSelector(state => state.product);
-  const {favorites} = useAppSelector(state => state.auth);
+  const {user} = useAppSelector(state => state.auth);
   const dispatch = useAppDispatch();
 
-  const favouritedProduct = favorites.find(item => item === product._id);
+  const favouritedProduct = user.favorites.find(item => item === product._id);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
