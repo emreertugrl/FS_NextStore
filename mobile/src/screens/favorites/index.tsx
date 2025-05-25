@@ -12,7 +12,7 @@ const Favorites = () => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
   useEffect(() => {
-    dispatch(getUserFavorites(user._id));
+    dispatch(getUserFavorites(user?._id));
   }, [user?.favorites]);
 
   return (
