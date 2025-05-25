@@ -82,6 +82,21 @@ class AuthContoller {
       next(error);
     }
   }
+  static async updateMe(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const refreshToken = req?.cookies?.refreshToken || req.refreshToken; // 🍪 Cookie'den alınır
+      if (!refreshToken) {
+        throw new Error("Refresh token not provided");
+      }
+      // Servis çağrılır
+      console.log(req.body);
+      const user = await AuthService.updateMe(req.user.userId, req.body.profileImage); // Eğer böyle bir servis yazdıysan
+
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
   static async addRemoveFavourites(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { productId } = req?.params;

@@ -8,6 +8,7 @@ interface IUser extends Document {
   email: string;
   password: string;
   role: string;
+  profileImage: string;
   refreshToken: string;
   favorites: [{ type: mongoose.Schema.Types.ObjectId; ref: "Product" }];
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -24,6 +25,7 @@ const userSchema = new Schema<IUser>(
       type: String,
       default: null,
     },
+    profileImage: String,
     favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
   },
   {

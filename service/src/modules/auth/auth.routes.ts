@@ -9,6 +9,7 @@ router.post("/refresh", AuthContoller.refresh);
 router.post("/login", AuthContoller.login);
 router.post("/logout", AuthContoller.logout);
 router.get("/me", authMiddleware, AuthContoller.me);
+router.put("/updateme", authMiddleware, AuthContoller.updateMe);
 router.get("/:id/favourites", authMiddleware, AuthContoller.getUserFavorites);
 router.put("/favourites/:productId", authMiddleware, AuthContoller.addRemoveFavourites);
 

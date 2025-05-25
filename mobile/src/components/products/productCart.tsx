@@ -6,7 +6,7 @@ import {Heart} from 'iconsax-react-nativejs';
 
 const ProductCard: React.FC = ({item, navigation}) => {
   const {user} = useAppSelector(state => state.auth);
-  const favouritedProduct = user.favorites.find(fav => fav === item._id);
+  const favouritedProduct = user?.favorites?.find(fav => fav === item._id);
 
   return (
     <TouchableOpacity onPress={navigation} style={styles.card}>

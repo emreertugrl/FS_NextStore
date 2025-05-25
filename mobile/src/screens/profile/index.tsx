@@ -1,25 +1,65 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {format} from 'date-fns';
 import {useNavigation} from '@react-navigation/native';
 import Routes from '../../utils/routes';
+import {AddCircle} from 'iconsax-react-nativejs';
+import {putRequest} from '../../service/verbs';
+import {UPDATE_ME_URL} from '../../service/urls';
+import uploadToCloudinary from '../../components/uploadToImageKit';
+import {getMe} from '../../store/actions/authActions';
 
 const Profile = () => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const {user} = useAppSelector(state => state.auth);
+
+  useEffect(() => {
+    dispatch(getMe());
+  }, [user]);
+
+  const updateMe = async () => {
+    const url = await uploadToCloudinary();
+
+    if (url) {
+      await putRequest(UPDATE_ME_URL, {profileImage: url});
+    }
+  };
+
   if (!user) return null;
   const admin = user.role === 'Admin';
 
   return (
     <View style={styles.container}>
       {/* Profil Görseli */}
-      <View style={styles.avatarContainer}>
-        <Image
-          source={{uri: 'https://ui-avatars.com/api/?name=' + user.name}}
-          style={styles.avatar}
-        />
+      <View>
+        <TouchableOpacity
+          onPress={updateMe}
+          style={{
+            position: 'absolute',
+            right: 0,
+            bottom: 20,
+            zIndex: 10000,
+            backgroundColor: '#fff',
+            padding: 5,
+            borderRadius: 100,
+          }}>
+          <AddCircle size={30} color="black" />
+        </TouchableOpacity>
+
+        {user.profileImage ? (
+          <View style={styles.avatarContainer}>
+            <Image source={{uri: user.profileImage}} style={styles.avatar} />
+          </View>
+        ) : (
+          <View style={styles.avatarContainer}>
+            <Image
+              source={{uri: 'https://ui-avatars.com/api/?name=' + user.name}}
+              style={styles.avatar}
+            />
+          </View>
+        )}
       </View>
 
       {/* Kullanıcı Bilgileri Kartı */}

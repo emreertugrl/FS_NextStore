@@ -149,6 +149,16 @@ class AuthService {
       throw error;
     }
   }
+  static async updateMe(userId: string, profileImage: string) {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profileImage },
+      { new: true, runValidators: true }
+    ).select("-password -__v -refreshToken");
+
+    if (!updatedUser) throw new Error("User not found");
+    return updatedUser;
+  }
   static async addRemoveFavourites(userId: string, productId: string) {
     try {
       const existingUser = await User.findOne({ _id: userId });
