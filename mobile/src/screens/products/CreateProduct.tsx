@@ -18,6 +18,7 @@ import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {Picker} from '@react-native-picker/picker';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {getProducts, updateProduct} from '../../store/actions/productActions';
+import Routes from '../../utils/routes';
 
 const ProductSchema = Yup.object().shape({
   name: Yup.string().required('Ürün adı gerekli'),
@@ -51,8 +52,7 @@ const CreateProductScreen: React.FC = () => {
         navigation.goBack();
       } else {
         const response = await postRequest(CREATE_PRODUCT_URL, values);
-
-        console.log('Ürün oluşturuldu:', response);
+        navigation.navigate(Routes.PRODUCTS);
       }
     } catch (error: any) {
       console.error(
