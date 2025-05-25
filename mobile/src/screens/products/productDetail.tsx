@@ -7,31 +7,28 @@ import {
   ScrollView,
   Button,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {Heart} from 'iconsax-react-nativejs';
 import {favoutireProduct} from '../../store/actions/authActions';
+import Loading from '../../components/loading';
 
 const ProductDetail = () => {
-  const {product} = useAppSelector(state => state.product);
+  const {product, loading} = useAppSelector(state => state.product);
   const {user} = useAppSelector(state => state.auth);
   const dispatch = useAppDispatch();
 
   const favouritedProduct = user.favorites.find(item => item === product._id);
 
+  if (loading) {
+    return <Loading message="Product Detail Loading..." />;
+  }
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <TouchableOpacity
         onPress={() => dispatch(favoutireProduct(product._id))}
-        style={{
-          position: 'absolute',
-          right: 30,
-          top: 30,
-          zIndex: 100,
-          backgroundColor: 'white',
-          padding: 10,
-          borderRadius: 100,
-        }}>
+        style={styles.favorite}>
         {
           <Heart
             size={30}
@@ -60,6 +57,15 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     backgroundColor: '#fff',
+  },
+  favorite: {
+    position: 'absolute',
+    right: 30,
+    top: 30,
+    zIndex: 100,
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 100,
   },
   image: {
     width: '100%',
