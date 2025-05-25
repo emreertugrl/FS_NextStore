@@ -9,6 +9,7 @@ import ProductDetail from '../screens/products/productDetail';
 import FilterScreen from '../screens/filter';
 import Products from '../screens/products';
 import CreateProductScreen from '../screens/products/CreateProduct';
+import CreateCategoryScreen from '../screens/category';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,13 @@ function RootNavigator() {
             }}
             name={Routes.PRODUCTS}
             component={Products}
+          />
+          <Stack.Screen
+            options={{
+              headerShown: true,
+            }}
+            name={Routes.CREATECATEGORY}
+            component={CreateCategoryScreen}
           />
           <Stack.Screen
             options={{

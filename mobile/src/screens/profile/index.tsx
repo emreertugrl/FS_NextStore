@@ -80,7 +80,7 @@ const Profile = () => {
         </View>
 
         <View style={styles.field}>
-          <Text style={styles.label}>Kayıt Tarihi:</Text>
+          <Text style={styles.label}>Register Date:</Text>
           <Text style={styles.value}>
             {format(new Date(user.createdAt), 'dd MMMM yyyy')}
           </Text>
@@ -98,7 +98,7 @@ const Profile = () => {
                 marginVertical: 10,
               }}>
               <Text style={{color: '#fff', fontSize: 16, fontWeight: 'bold'}}>
-                Ürünleri Gör
+                Show Products
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -112,7 +112,21 @@ const Profile = () => {
                 marginVertical: 10,
               }}>
               <Text style={{color: '#fff', fontSize: 16, fontWeight: 'bold'}}>
-                Ürün Ekle
+                Add Product
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate(Routes.CREATECATEGORY)}
+              style={{
+                backgroundColor: 'orange',
+                paddingVertical: 10,
+                paddingHorizontal: 20,
+                borderRadius: 8,
+                alignItems: 'center',
+                marginVertical: 10,
+              }}>
+              <Text style={{color: '#fff', fontSize: 16, fontWeight: 'bold'}}>
+                Add Category
               </Text>
             </TouchableOpacity>
           </>
