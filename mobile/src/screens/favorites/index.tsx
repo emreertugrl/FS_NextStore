@@ -8,12 +8,12 @@ import {useNavigation} from '@react-navigation/native';
 import Routes from '../../utils/routes';
 
 const Favorites = () => {
-  const {user, favorites} = useAppSelector(state => state.auth);
+  const {user, favorites} = useAppSelector(state => state?.auth);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
   useEffect(() => {
     dispatch(getUserFavorites(user._id));
-  }, [user.favorites]);
+  }, [user?.favorites]);
 
   return (
     <View style={styles.container}>

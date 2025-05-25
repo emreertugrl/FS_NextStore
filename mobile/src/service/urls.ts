@@ -18,3 +18,4 @@ export const DELETE_PRODUCT_URL = '/product';
 export const GET_CATEGORIES_URL = '/category';
 export const GET_CATEGORY_URL = '/category';
 export const CREATE_CATEGORY_URL = '/category';
+export const UPDATE_CATEGORY_URL = '/category';

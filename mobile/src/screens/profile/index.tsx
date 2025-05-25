@@ -126,7 +126,7 @@ const Profile = () => {
                 marginVertical: 10,
               }}>
               <Text style={{color: '#fff', fontSize: 16, fontWeight: 'bold'}}>
-                Add Category
+                Add / Update Category
               </Text>
             </TouchableOpacity>
           </>

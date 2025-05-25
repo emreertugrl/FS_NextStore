@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   TextInput,
@@ -8,19 +8,27 @@ import {
   Alert,
   ActivityIndicator,
   FlatList,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
-import {postRequest} from '../../service/verbs';
-import {CREATE_CATEGORY_URL} from '../../service/urls';
+import {postRequest, putRequest} from '../../service/verbs';
+import {CREATE_CATEGORY_URL, UPDATE_CATEGORY_URL} from '../../service/urls';
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {getCategories} from '../../store/actions/categoryActions';
 
 export default function CreateCategoryScreen() {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<null | {
+    _id: string;
+    name: string;
+  }>(null);
+
   const {categories} = useAppSelector(state => state.category);
   const dispatch = useAppDispatch();
 
-  const handleCreateCategory = async () => {
+  const handleSubmit = async () => {
     if (!name.trim()) {
       Alert.alert('Error', 'Category name cannot be empty');
       return;
@@ -28,28 +36,47 @@ export default function CreateCategoryScreen() {
 
     setLoading(true);
     try {
-      const response = await postRequest(CREATE_CATEGORY_URL, {name});
-      Alert.alert('Success', `Category created: ${response.data.name}`);
+      if (editingCategory) {
+        // Düzenleme işlemi
+        await putRequest(`${UPDATE_CATEGORY_URL}/${editingCategory._id}`, {
+          name,
+        });
+        Alert.alert('Success', 'Category updated');
+      } else {
+        // Yeni ekleme işlemi
+        const response = await postRequest(CREATE_CATEGORY_URL, {name});
+        Alert.alert('Success', `Category created: ${response.data.name}`);
+      }
+
       setName('');
-      // Yeni kategori ekledikten sonra tekrar fetch et
+      setEditingCategory(null);
       dispatch(getCategories());
     } catch (error) {
-      Alert.alert('Error', 'Failed to create category');
+      Alert.alert('Error', 'Operation failed');
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleSelectCategory = (category: {_id: string; name: string}) => {
+    setEditingCategory(category);
+    setName(category.name);
+  };
+
   const renderItem = ({item}: {item: {_id: string; name: string}}) => (
-    <View style={[styles.badge, {width: 150}]}>
+    <TouchableOpacity
+      onPress={() => handleSelectCategory(item)}
+      style={[styles.badge, {width: 150}]}>
       <Text style={styles.badgeText}>{item.name}</Text>
-    </View>
+    </TouchableOpacity>
   );
 
   const renderHeader = () => (
     <View>
-      <Text style={styles.label}>Add New Category</Text>
+      <Text style={styles.label}>
+        {editingCategory ? 'Update Category' : 'Add New Category'}
+      </Text>
       <TextInput
         style={styles.input}
         value={name}
@@ -60,16 +87,31 @@ export default function CreateCategoryScreen() {
       {loading ? (
         <ActivityIndicator size="large" color="#007bff" />
       ) : (
-        <Button title="Create Category" onPress={handleCreateCategory} />
+        <Button
+          title={editingCategory ? 'Update Category' : 'Create Category'}
+          onPress={handleSubmit}
+        />
+      )}
+      {editingCategory && (
+        <Button
+          title="Cancel Editing"
+          color="red"
+          onPress={() => {
+            setEditingCategory(null);
+            setName('');
+          }}
+        />
       )}
       <Text style={[styles.label, {marginTop: 30}]}>Existing Categories</Text>
     </View>
   );
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <FlatList
-        data={categories}
+        data={categories.filter(cat => cat.name.toLowerCase() !== 'all')}
         keyExtractor={item => item._id}
         renderItem={renderItem}
         numColumns={2}
@@ -80,7 +122,7 @@ export default function CreateCategoryScreen() {
         }}
         showsVerticalScrollIndicator={false}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -109,6 +151,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 10,
   },
   badgeText: {
     color: '#fff',
