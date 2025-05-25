@@ -19,9 +19,6 @@ export default function CreateCategoryScreen() {
   const [loading, setLoading] = useState(false);
   const {categories} = useAppSelector(state => state.category);
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(getCategories());
-  }, [categories]);
 
   const handleCreateCategory = async () => {
     if (!name.trim()) {
@@ -34,6 +31,8 @@ export default function CreateCategoryScreen() {
       const response = await postRequest(CREATE_CATEGORY_URL, {name});
       Alert.alert('Success', `Category created: ${response.data.name}`);
       setName('');
+      // Yeni kategori ekledikten sonra tekrar fetch et
+      dispatch(getCategories());
     } catch (error) {
       Alert.alert('Error', 'Failed to create category');
       console.error(error);
